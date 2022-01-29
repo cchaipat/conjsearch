@@ -379,10 +379,10 @@ Saving data...
               // Draw rectangles
               for(i=0;i<orienVec.length;i++){
                 if (orienVec[i] == 0){
-                  makeRectangle('v',numarrayX[i]+(Math.random()-0.5)*2*posjit,numarrayY[i]+(Math.random()-0.5)*2*posjit,recW,recH,false,colorVec[i],colorVec[i]);
+                  makeRectangle('v',numarrayX[i]+(Math.random()-0.5)*2*posjit,numarrayY[i]+(Math.random()-0.5)*2*posjit,recW,recH,false,colorVec[i],colorVec[i],0,45);
                 }
                 else {
-                  makeRectangle('h',numarrayX[i]+(Math.random()-0.5)*2*posjit,numarrayY[i]+(Math.random()-0.5)*2*posjit,recH,recW,false,colorVec[i],colorVec[i]);
+                  makeRectangle('h',numarrayX[i]+(Math.random()-0.5)*2*posjit,numarrayY[i]+(Math.random()-0.5)*2*posjit,recH,recW,false,colorVec[i],colorVec[i],0,45);
                 }
               }
           }
