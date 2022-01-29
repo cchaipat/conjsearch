@@ -173,7 +173,7 @@ Saving data...
 //////////////////////////////////////////////////////////////////////////////////
 -->
 
-<<div id='frame1'; class='trialDiv'>
+<div id='frame1'; class='trialDiv'>
     <p> 
     <br> อยากจะให้ทำอะไรสักอย่าง
     <br> แต่ยังไม่แน่ใจ
@@ -258,7 +258,7 @@ Saving data...
           
           // Settings
           var code = "CC" + Math.round(Math.random()*100000) + "92";
-          var task='Simon';
+          var task='conjsearch';
           var c1=document.getElementById("myCanvas");
           var ctx1=c1.getContext("2d");   
           var centerX=c1.width/2;
@@ -286,14 +286,6 @@ Saving data...
 
           var rt=[];
           var moveLast=0;
-          
-          var initTime=3000;
-          var presTime=1000;
-          var delayTime=1000;
-          var feedbacktime=1000;
-          var buttonColors =['#FFFFFF','#73FA78','#FF9E98'];
-          var buttonShadow =[0,3,3];
-          var buttonShadow2 =4;
 
           var bgcolor = '#404040';
           var bgx = Math.round(Math.random());
@@ -306,10 +298,16 @@ Saving data...
           var colors = ['#73FA78','#FF9E98'];
           var Xspan   = 180;
           var Yspan   = 180;
-          var SSS     = [6,8,10,12,14,16,18,20,22]
+          // var SSS     = [6,8,10,12,14,16,18,20,22]
+          var currSS  = 6;
+          var nTrials = 50;
+          var NupNdown = 3;
+          var quickerBy = 1000;
+          var slowerBy = 500;
           var nBlock  = 5;
           var recW    = 8;
           var recH    = 40;
+          var timeLimit = 10*1000;
           var Xblock  = Xspan*2/nBlock;
           var Yblock  = Yspan*2/nBlock;
           var posjit  = 8;
@@ -335,6 +333,10 @@ Saving data...
 
           var ss = 20;
 
+          var trialStruct = [];
+          var trackRecord = 0; 
+          var thatRight = false;
+
           function shuffleSS(setsize){
             Shuffle(posId);
             if (Math.random()>0.5){
@@ -355,30 +357,6 @@ Saving data...
             }
             
           }
-
-          
-          
-          // Object positions
-          
-          // Define positions before rotation
-          xTemp=[];
-          yTemp=[];
-          var theta = [];
-          for(i=0;i<numDots;i++){
-              theta.push(Math.round(( ((2*Math.PI/numDots)*i))*(180/Math.PI)))
-              xTemp.push(objDist*Math.cos((2*Math.PI/numDots)*i));
-              yTemp.push(objDist*Math.sin((2*Math.PI/numDots)*i))
-          }
-
-          // Rotate positions
-          xPos=[];
-          yPos=[];
-          
-          for(i=0;i<numDots;i++){
-              xPos.push(centerX-(Math.cos(circRot)*xTemp[i])+(Math.sin(circRot)*yTemp[i]));
-              yPos.push(centerY+(Math.sin(circRot)*xTemp[i])+(Math.cos(circRot)*yTemp[i]))
-          }
-
           function shuffle(array) {
             var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -396,36 +374,7 @@ Saving data...
             }
             return array;
           }
-
-          function paintcolor(colAng){
-            var color=[];
-            for(ic=0;ic<colAng.length;ic++){
-                if (colAng[ic] == 99999){
-                    color[ic]='#FFFFFF'
-                }else{
-                    color[ic]=angle2HEX(colAng[ic])
-                }
-            }
-            return color 
-          }
-
-          function makeCircles(currColor){
-            // Draw circles
-
-            for(i=0;i<numDots;i++){
-                makeCircle('dot'+i,xPos[i],yPos[i],objSize+2,false,0,'#000000','#000000');
-                makeCircle('dotIn'+i,xPos[i],yPos[i],objSize,false,0,currColor[i],currColor[i]);
-                // makeCircle('dotIn'+i,xPos[i],yPos[i],objSize,false,0,currColor[i],currColor[i]);
-            }
-          }
-
-          function makeButton(buttonColor,buttonShadowx){
-                makeCircle('button',centerX,centerY+2,150+buttonShadow2,false,0,'#000000','#000000');
-                makeCircle('button',centerX,centerY,150,false,0,'#C4C4C4','#C4C4C4');
-                makeCircle('button',centerX,centerY+buttonShadowx,100+buttonShadow2,false,0,'#000000','#000000');
-                makeCircle('button',centerX,centerY,100,false,0,buttonColor,buttonColor);
-          }
-
+       
           function makeSearchArray(numarrayX,numarrayY,recW,recH,orienVec,colorVec){
               // Draw rectangles
               for(i=0;i<orienVec.length;i++){
@@ -442,14 +391,6 @@ Saving data...
             // Fill background
                 makeRectangle('bg',centerX,centerX,400,400,false,bgcolor,bgcolor);
              
-          }
-
-          function makeCrosshair(){
-            // Draw rectangles
-            for(i=0;i<numDots;i++){
-                makeRectangle('cross1',centerX,centerX,2,10,false,'#000000','#000000');
-                makeRectangle('cross2',centerX,centerY,10,2,false,'#000000','#000000');
-            }
           }
 
           var st=null;
@@ -473,33 +414,31 @@ Saving data...
               erase(ctx1);
               clear();
               makeBackground(bgcolor)
-              makeCrosshair();
               drawObjects(ctx1,objects);
-              $('#rule0').hide();
-              $('#rule1').hide();
-              // var curtrialStruct = {};
-              
-              // curtrialStruct.colordist = colordist;
-              // curtrialStruct.stimdur = stimdur;
-              // curtrialStruct.delaytime = alltrldel[curTrial];
-              // curtrialStruct.targcol = alltrlseq[curTrial];
-              // curtrialStruct.testpos = alltstpos[curTrial];
-              // curtrialStruct.trlrot = alltrlrot[curTrial];
-              // curtrialStruct.colorwrot = allcolorwrot[curTrial];
-              // curtrialStruct.tarcode = alltarcode[curTrial];
-              // curtrialStruct.resp = allselCol[curTrial];
-              // curtrialStruct.respAng = allcolAng[curTrial];
-              // curtrialStruct.rt = rt[curTrial];
-              // curtrialStruct.realstim = realstimtime[curTrial];
-              // curtrialStruct.delaytimeReal = realdelaytime[curTrial];
-              // trialStruct.push(curtrialStruct);
+              var curtrialStruct = {};
+              curtrialStruct.X = X;
+              curtrialStruct.Y = Y;
+              curtrialStruct.ori = ori;
+              curtrialStruct.col = col;
+              curtrialStruct.corr = thatRight;
+              curtrialStruct.rt = rt;
+              curtrialStruct.track = trackRecord;
+              curtrialStruct.currSS = currSS;
+              curtrialStruct.timeLimit = timeLimit;
+              if (trackRecord>=NupNdown){
+                if (currSS < maxss*2-2){
+                  currSS = currSS+2;
+                }else{
+                  timeLimit = timeLimit-quickerBy;
+                }         
+              } 
 
+              if (trackRecord==0 & currSS >4){
+                currSS = currSS-2;
+                timeLimit = timeLimit+slowerBy;
+              } 
 
-              // document.getElementById('targ').value=JSON.stringify(color);
-              // document.getElementById('resp').value=JSON.stringify(selColor);
-              // document.getElementById('respAng').value=JSON.stringify(selAng);
-              // document.getElementById('targAng').value=JSON.stringify(targAng);
-              // document.getElementById('rt').value=JSON.stringify(rt);
+              trialStruct.push(curtrialStruct);
 
               curTrial = curTrial+1 ; 
 
@@ -523,12 +462,8 @@ Saving data...
              erase(ctx1);
              clear();
              drawObjects(ctx1,objects);
-             for (iSeq=0;iSeq < SSS.length; iSeq++){  
-                initialT(5000*iSeq,SSS[iSeq]);
-                // Cue();
-             }
+             initialT(0,currSS);
           }
-
 
           function initialT(waittime,SS){
             // Initial
@@ -542,68 +477,12 @@ Saving data...
                 drawObjects(ctx1,objects);
                 var dT = new Date();
                 STT=dT.getTime();
+                isTest = true;
             },waittime);
-          }
-            
-
-          function RemoveStim(waittime2){    
-            // Remove stimuli
-            setTimeout(function(){
-                erase(ctx1);
-                clear();
-                makeButton(buttonColors[0],buttonShadow[0])
-                drawObjects(ctx1,objects);
-                var dST = new Date();
-                realstimtime.push(dST.getTime()-STT);
-                var dST2 = new Date();
-                ST2 = dST2.getTime();
-            },waittime2);
-          }
-
-
-          function Cue(waittime3){
-            // Cue
-            setTimeout(function(){
-                var dST3 = new Date();
-                //realdelaytime.push(dST3.getTime()-ST2);
-                erase(ctx1);
-                clear();
-                
-                currProbe=0;
-                moveLast = 0 ;
-                makeBackground(bgcolor)
-                makeCircles(nullcolor);
-                makeCrosshair();
-                drawObjects(ctx1,objects);
-                
-                
-                startTime();
-                console.log('now!')
-                isTest=true;
-            },waittime3);
-        }
-
-        function Feedback(){    
-            // Remove stimuli
-            setTimeout(function(){
-                erase(ctx1);
-                clear();
-                makeBackground(bgcolor)
-                makeCircles(nullcolor);
-                makeCrosshair();
-                drawObjects(ctx1,objects);
-                trialIsOver();
-            },feedbacktime);
           }
 
         function showFirstTrial() {
             isTrain = false;
-
-
-            // Draw first fixation 
-            // makeCrosshair();
-            // drawObjects(ctx1,objects);
-
             // Begin
             $('#frame5').hide();
             showTrial();
@@ -623,55 +502,13 @@ Saving data...
                 drawObjects(ctx1,objects);
                 $('#frame1').show();
                 // Begin
-                $('#cont1').on('click',pressed);
-                function pressed(){
-                  showPractice_f2();
-                }
+                $('#cont1').on('click',showPractice_f5);
             }
 
         }
 
-        function showPractice_f2(){
-            $('#frame1').hide();
-            // erase(ctx1);
-            // clear();
-            // makeSearchArray(X,Y,recW,recH,ori,col)
-            // drawObjects(ctx1,objects);
-            $('#frame2').show();
-            $('#cont2').click(showPractice_f3);
-        }
-
-        function showPractice_f3(){
-            $('#frame2').hide();
-            // erase(ctx1);
-            // clear();
-            // makeSearchArray(X,Y,recW,recH,ori,col)
-            // drawObjects(ctx1,objects);
-            $('#frame3').show();
-            $('#cont3').click(showPractice_f4);
-        }
-
-        function showPractice_f4(){
-
-                // isTrain = true;
-                // console.log(order)
-                $('#frame3').hide();
-                // erase(ctx1);
-                // clear();
-                // makeSearchArray(X,Y,recW,recH,ori,col)
-                // drawObjects(ctx1,objects);
-                
-                $('#frame4').show();
-                $('#cont4').click(showPractice_f5);
-        }
-
         function showPractice_f5(){
-             
-            $('#frame4').hide();
-            // erase(ctx1);
-            // clear();
-            // makeSearchArray(X,Y,recW,recH,ori,col)
-            // drawObjects(ctx1,objects);
+            $('#frame1').hide();
             $('#frame5').show();
             $('#cont5').click(showFirstTrial);
         }
@@ -684,7 +521,7 @@ Saving data...
               var dataToServer = {};
               dataToServer.id = getParameterByName("subjectId"); /* getParameterByName("code") */
               dataToServer.experimenter = 'Chaipat';
-              dataToServer.experimentName = 'WMcolordist_delay';
+              dataToServer.experimentName = 'conjsearch';
               dataToServer.curData = JSON.stringify(trialStruct);
               $.post("https://psyc241.ucsd.edu/Turk/save.php", dataToServer, AfterSuccessDataSaving).fail(AfterFailedSaving);
         }

@@ -380,57 +380,45 @@ $(document).on("mouseup", function(e) {
 
 });
 
-$(document).on("mousemove", function(e) {
+
+
+$(document).on("mousedown", function(e) {
     // console.log(isTrain)
     inBound=e.target.id=='myCanvas';
     if(isTest & inBound | isTrain){
-        
-        xdif=centerX-e.offsetX;
-        ydif=centerY-e.offsetY;
-        
-        dist=Math.pow(Math.pow(xdif,2)+Math.pow(ydif,2),.5);
-        moveLast = Math.max(moveLast,dist)
-        wTemp=Math.acos(xdif/dist);
-        if(ydif>0){
-            wTemp=2*Math.PI-wTemp;
-        }
-        
-        wholeDegree=(Math.round((wTemp)*(180/Math.PI)))+circRot;
-        if(wholeDegree>360){
-            wholeDegree=wholeDegree-360;
-        }
+        xdif=e.offsetX;
+        ydif=e.offsetY;
+        xsq = X.map(function(v) { return ((v - xdif)**2); })
+        ysq = Y.map(function(v) { return ((v - ydif)**2); })
+        pickId = xsq.map(function(v,i) { return (((v + ysq[i])**0.5)<Xblock/2); })  
 
-        thetafrom = thetadiff/2-Math.abs((wholeDegree % thetadiff)-thetadiff/2)
-
-        if ((dist>(objDist-objSize)) && (dist<(objDist+objSize))  && (Math.abs(thetafrom)<visualang)) {
-            const thistemp = Object.values(Object.assign({}, testtemp)); 
-            idx = Math.round(wholeDegree / thetadiff);
-            if (idx == numDots) {idx=0}
-
-            // thistemp[idx] = 20;
-            thiscolor = paintcolor(thistemp);
-            thiscolor[idx] = '#D3D3D3'
-            erase(ctx1);
-            clear();
-            makeBackground(bgcolor[bgx])
-            makeCrosshair();
-            makeCircles(thiscolor);
-            drawObjects(ctx1,objects);
+        if (pickId.some(v => v===true)) {
+            console.log('picked!')
+            var dT2 = new Date();
+            ET=dT2.getTime();
+            rt = ET-STT;
+            if (pickId[pickId.length-1]) {
+                console.log('right!')
+                if (rt<timeLimit){
+                    trackRecord = trackRecord+1;
+                    thatRight = true;
+                }else{
+                    console.log('right but too late')
+                    thatRight = false;
+                    trackRecord = 0;
+                }
+            }else{
+                console.log('nope')
+                thatRight = false;
+                trackRecord = 0;
+            }
+            isTest = false;
+            trialIsOver();
+            
         }
         else {
-            const thistemp = Object.values(Object.assign({}, testtemp));
-            thiscolor = paintcolor(testtemp);
-            erase(ctx1);
-            clear();
-            makeBackground(bgcolor[bgx])
-            makeCrosshair();
-            makeCircles(thiscolor);
-            drawObjects(ctx1,objects);
+            console.log('waiting...')
         }
-        
-
-        
-        
     }
     
 });
