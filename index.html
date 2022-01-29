@@ -164,7 +164,7 @@ Saving data...
 -->
 <!-- set CANVAS -->
 <div align="center">
-    <canvas id="myCanvas"  width="400" height="400" style="cursor:default;border:none;outline-width:2px;outline-color:#000000">
+    <canvas id="myCanvas"  width="800" height="600" style="cursor:default;border:none;outline-width:2px;outline-color:#000000">
     </canvas>
     <p id="instr"></p>
 </div>
@@ -296,30 +296,31 @@ Saving data...
           var realdelaytime =[];
 
           var colors = ['#73FA78','#FF9E98'];
-          var Xspan   = 180;
-          var Yspan   = 180;
+          var Xspan   = 400;
+          var Yspan   = 300;
           // var SSS     = [6,8,10,12,14,16,18,20,22]
           var currSS  = 6;
           var nTrials = 50;
           var NupNdown = 3;
           var quickerBy = 1000;
           var slowerBy = 500;
-          var nBlock  = 5;
+          var nBlockx  = 8;
+          var nBlocky  = 6;
           var recW    = 8;
           var recH    = 40;
           var timeLimit = 10*1000;
-          var Xblock  = Xspan*2/nBlock;
-          var Yblock  = Yspan*2/nBlock;
+          var Xblock  = Xspan*2/nBlockx;
+          var Yblock  = Yspan*2/nBlocky;
           var posjit  = 8;
-          var Xtemps = []; for (ix = 0; ix < nBlock; ix++) { Xtemps.push(Math.round(Xblock/2)+Xblock*ix - Xspan +  centerX)}
-          var Ytemps = []; for (iy = 0; iy < nBlock; iy++) { Ytemps.push(Math.round(Yblock/2)+Yblock*iy- Yspan +  centerY)}
+          var Xtemps = []; for (ix = 0; ix < nBlockx; ix++) { Xtemps.push(Math.round(Xblock/2)+Xblock*ix - Xspan +  centerX)}
+          var Ytemps = []; for (iy = 0; iy < nBlocky; iy++) { Ytemps.push(Math.round(Yblock/2)+Yblock*iy- Yspan +  centerY)}
           
           var Xs = []; 
           var Ys = [];
           var posId = [];
           var count = 0;
-          for (ix =0; ix < nBlock; ix++) { 
-            for (iy = 0; iy< nBlock; iy++) {
+          for (ix =0; ix < nBlockx; ix++) { 
+            for (iy = 0; iy< nBlocky; iy++) {
               Xs.push(Xtemps[ix]);
               Ys.push(Ytemps[iy]);
               posId.push(count);
@@ -327,7 +328,7 @@ Saving data...
             } 
           }
 
-          var maxss = Math.floor((nBlock*nBlock-1)/2);
+          var maxss = Math.floor((nBlockx*nBlocky-1)/2);
           var oris = []; for (j = 0; j < maxss; j++) {oris.push(0);oris.push(1)};
           var cols = []; for (k = 0; k < maxss; k++) {cols.push(0);cols.push(1)};
 
@@ -389,7 +390,7 @@ Saving data...
 
           function makeBackground(bgcolor){
             // Fill background
-                makeRectangle('bg',centerX,centerX,400,400,false,bgcolor,bgcolor);
+                makeRectangle('bg',centerX,centerX,800,800,false,bgcolor,bgcolor);
              
           }
 
