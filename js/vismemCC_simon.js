@@ -52,7 +52,7 @@ function drawText(ctx,text){
     ctx.fillText(text.words, text.x, text.y);
 }
 
-function makeCircle(id,x,y,radius,canMove,lineWidth,color,lineCol,arc1,arc2){
+function makeCircle(id,x,y,radius,canMove,color,lineCol,lineWidth,arc1,arc2){
      lineWidth = typeof lineWidth !== 'undefined' ? lineWidth : 0;
      lineCol = typeof lineCol !== 'undefined' ? lineCol : '#000000';
      color = typeof color !== 'undefined' ? color : '#000000';
@@ -122,7 +122,6 @@ function overlapCircle(x,y,circle){
     }  
 }
 
-
 function makeRectangle(id,x,y,width,height,canMove,color,lineCol,lineWidth,rot){
      canMove = typeof canMove !== 'undefined' ? canMove : false;
      color = typeof color !== 'undefined' ? color : '#000000';
@@ -140,6 +139,8 @@ function makeRectangle(id,x,y,width,height,canMove,color,lineCol,lineWidth,rot){
      rectangle.color=color;
      rectangle.rot=rot;
      rectangle.canMove=canMove
+     rectangle.lineWidth = lineWidth;
+     rectangle.lineCol = lineWidth;
      rectangle.type='rectangle';
      objects.push(rectangle)
      return rectangle;
@@ -164,7 +165,7 @@ function drawRectangle(ctx,rectangle){
      ctx.rotate(rectangle.rot*Math.PI/180);
      ctx.translate(-rectangle.x, -rectangle.y);
      ctx.fillRect(rectangle.x-rectangle.width/2,rectangle.y-rectangle.height/2,rectangle.width,rectangle.height);
-
+     ctx.lineWidth = rectangle.lineWidth;
     
      ctx.translate(rectangle.x, rectangle.y);
      ctx.rotate(-rectangle.rot*Math.PI/180);
@@ -331,58 +332,14 @@ var widthRate=2.5;
 var radRate=2.5;
 
 
-$(document).keypress(function(e) {
-
-});
-
-$(document).on("mousedown", function(e) {
-    // inBound=e.toElement.id=='myCanvas';
-    inBound=e.target.id=='myCanvas';
-    hasMoved=moveLast>10;
-    waitTime=endTime();
-    hasWaited=waitTime>150;
-    if(isTest & currProbe>=0 & inBound & hasMoved & hasWaited){
-        currProbe = currProbe+1;
-        moveLast=0;
-        rt.push(endTime());
-        startTime();
-        if (currProbe==nSeq){
-            erase(ctx1);
-            clear();
-            makeBackground(bgcolor[bgx])
-            makeCrosshair();
-            drawObjects(ctx1,objects);
-
-                isTest = false;
-                // allselCol.push(JSON.stringify(selColor));
-                // allcolAng.push(JSON.stringify(selAng));
-                // document.getElementById('targ').value=JSON.stringify(color);
-                // document.getElementById('resp').value=JSON.stringify(selColor);
-                // document.getElementById('targAng').value=JSON.stringify(targAng);
-                // document.getElementById('respAng').value=JSON.stringify(selAng);
-                // document.getElementById('rt').value=JSON.stringify(rt);
-                Feedback();
-        }
-        
-    }else if(isTest & !hasMoved){
-        document.getElementById('instr').innerHTML='Please move the mouse before clicking';
-    }else if(isTrain){
-        showPractice_f5()
-        isTrain = false;
-        // var isTrain = stopTrain();
-        // function stopTrain(){isTrain = false; return isTrain;}
-        
-    }
-
+$(document).keypress(function(e){
 });
 
 $(document).on("mouseup", function(e) {
 
 });
 
-
-
-$(document).on("mousedown", function(e) {
+$("#yes").click(function(e) {
     // console.log(isTrain)
     inBound=e.target.id=='myCanvas';
     if(isTest & inBound | isTrain){

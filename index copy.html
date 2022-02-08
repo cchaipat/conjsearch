@@ -21,24 +21,6 @@
       display: none;
     }
 
-    .button {
-      border: none;
-      color: white;
-      background-color: gray;
-      border-radius: 8px;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      color: rgb(200,200,200);
-      display: inline-block;
-      font-size: 30px;
-      margin: 4px 2px;
-      cursor: pointer;
-    }
-    .button:hover{
-      color: white;
-    }
-
     body {
       font-family: Arial, Helvetica;
       font-size: 12pt;
@@ -72,12 +54,9 @@
       padding: 5px;
       margin: 0 auto;
     }
-
     .continueExp:hover{
       color: white;
     }
-
-    
 
     .continueExp {
       color: rgb(200,200,200);
@@ -196,8 +175,8 @@ Saving data...
 
 <div id='frame1'; class='trialDiv'>
     <p> 
-    <br> นี่คือสิ่งที่คุณต้องหา
-    <br> ถ้าหาเจอให้ตอบว่า "มี" ถ้าไม่เจอให้ตอบว่า "ไม่มี" 
+    <br> อยากจะให้ทำอะไรสักอย่าง
+    <br> แต่ยังไม่แน่ใจ
     <br>
     <br>
     <div class="continueButton">
@@ -206,10 +185,40 @@ Saving data...
     
 </div>
 
+<div id='frame2'; class='trialDiv'>
+    <p> 
+    <br> อะไรจะโผล่มาแบบนี้
+    <br> พยายามจำตำแหน่งเอาไว้
+
+    <div class="continueButton">
+      <a href="#" id="cont2" class="continueExp"> ไปค่ะพี่สุชาติ </a>
+    </div>
+</div>
+
+<div id='frame3'; class='trialDiv'>
+    <p> 
+    <br> แล้วก็จะหายไป
+    <br>
+
+    <div class="continueButton">
+      <a href="#" id="cont3" class="continueExp"> ไปค่ะพี่สุชาติ </a>
+    </div>
+</div>
+
+<div id='frame4'; class='trialDiv'>
+    <p> 
+    <br> พอมีสัญญาณให้ตอบก็ตอบได้เลย
+    <br> กดลงไปบนกลมๆที่มองเห็นได้เลยเพื่อตอบ 
+
+    <div class="continueButton">
+      <a href="#" id="cont4" class="continueExp"> ไปค่ะพี่สุชาติ </a>
+    </div>
+</div>
+
 <div id='frame5'; class='trialDiv'>
     <p> 
-    <br> พยายามตอบให้เร็วที่สุดเท่าที่จะทำได้ โดยที่ไม่ผิด
-    <br> ถ้าหาเจอให้ตอบว่า "มี" ถ้าไม่เจอให้ตอบว่า "ไม่มี" 
+    <br> จะเป็นเช่นนี้ไปเรื่อยๆ 
+    <br> พร้อมไหม
 
     <div class="continueButton">
       <a href="#" id="cont5" class="continueExp"> ไปค่ะพี่สุชาติ </a>
@@ -230,20 +239,6 @@ Saving data...
     <br> 
     <br> <br> กรุณาใช้ <b>เมาส์</b> กดลงบนปุ่ม </p>
 </div>
-
-<div id='respDiv'; class='trialDiv'>
-    <div id='target'>มีสี่เหลี่ยมสีขาวหรือไม่</div>
-    <br>
-
-    <button type="button"  id="no" onClick="checkResp(0)" class='button' >
-      <a> ไม่มี </a>
-    </button>
-
-    <button type="button"  id="yes" onClick="checkResp(1)" class='button'>
-      <a> มี </a>
-    </button>
-</div>
-
 
 <!--
 //////////////////////////////////////////////////////////////////////////////////
@@ -281,7 +276,6 @@ Saving data...
           var thetadiff = 360/numDots;
           var nSeq = 4;
           var circRot= 0;
-          var butt = NaN;
           // var colRot= 0;
 
           var nullcolor = []; for (var idot =0; idot<numDots;idot++){nullcolor[idot] = '#FFFFFF'}
@@ -293,17 +287,15 @@ Saving data...
           var rt=[];
           var moveLast=0;
 
-          var bgcolor = '#8b8680';
+          var bgcolor = '#404040';
           var bgx = Math.round(Math.random());
           var isTest=false;
           var isTrain = false;
-          var currProbe=0;
+          var currProbe=-1;
           var realstimtime =[]; 
           var realdelaytime =[];
 
           var colors = ['#FFFFFF','#000000'];//['#73FA78','#FF9E98'];
-          var colorsTxt = ['สีขาว','สีดำ'];//['#73FA78','#FF9E98'];
-          var shapesTxt = ['สี่เหลี่ยม','วงกลม'];
           var Xspan   = 400;
           var Yspan   = 300;
           // var SSS     = [6,8,10,12,14,16,18,20,22]
@@ -322,9 +314,7 @@ Saving data...
           var posjit  = 8;
           var Xtemps = []; for (ix = 0; ix < nBlockx; ix++) { Xtemps.push(Math.round(Xblock/2)+Xblock*ix - Xspan +  centerX)}
           var Ytemps = []; for (iy = 0; iy < nBlocky; iy++) { Ytemps.push(Math.round(Yblock/2)+Yblock*iy- Yspan +  centerY)}
-          var shaperand = [0,1];
-          var change = NaN;
-
+          
           var Xs = []; 
           var Ys = [];
           var posId = [];
@@ -341,18 +331,6 @@ Saving data...
           var maxss = Math.floor((nBlockx*nBlocky-1)/2);
           var oris = []; for (j = 0; j < maxss; j++) {oris.push(0);oris.push(1)};
           var cols = []; for (k = 0; k < maxss; k++) {cols.push(0);cols.push(1)};
-          if (Math.random()>0.5){
-              for (j = 0; j < cols.length; j++) {cols[j] = 1-cols[j]};
-            }
-
-          if (Math.random()>0.5){
-              shaperand = [1,0];
-            }
-          
-          var tarshape = shapesTxt[shaperand[0]];
-          var tarcolor = colorsTxt[cols[0]];
-
-          $('#target').html("มี"+tarshape+tarcolor+"หรือไม่")
 
           var ss = 20;
 
@@ -362,21 +340,21 @@ Saving data...
 
           function shuffleSS(setsize){
             Shuffle(posId);
-            
+            if (Math.random()>0.5){
+              for (j = 0; j < cols.length; j++) {cols[j] = 1-cols[j]};
+            }
+
             X = []; for (ix = 0; ix < setsize+1; ix++) {X.push(Xs[posId[ix]])};
             Y = []; for (iy = 0; iy < setsize+1; iy++) {Y.push(Ys[posId[iy]])};          
             ori = []; for (j = 0; j < setsize; j++) {ori.push(oris[j])};
             col = []; for (j = 0; j < setsize; j++) {col.push(colors[cols[j]])};
 
-            // add the target or not
-            if (Math.random() > 0.5){
+            if (Math.random > 0.5){
               ori.push(oris[setsize]);
-              col.push(colors[cols[setsize]]);
-              change = 0;
+              col.push(colors[1-cols[setsize]]);
             } else {
               ori.push(1-oris[setsize]);
               col.push(colors[cols[setsize]]);
-              change = 1;
             }
             
           }
@@ -413,7 +391,7 @@ Saving data...
           function makeSearchArray(numarrayX,numarrayY,recW,recH,orienVec,colorVec){
               // Draw rectangles
               for(i=0;i<orienVec.length;i++){
-                if (orienVec[i] == shaperand[0]){
+                if (orienVec[i] == 0){
                   makeCircle('c',numarrayX[i]+(Math.random()-0.5)*2*posjit,numarrayY[i]+(Math.random()-0.5)*2*posjit,recW/2,false,colorVec[i],colorVec[i]);
        
                 }
@@ -521,7 +499,6 @@ Saving data...
             isTrain = false;
             // Begin
             $('#frame5').hide();
-            $('#respDiv').show();
             showTrial();
             startTrialTime = new Date();
             // $('.trialDiv').hide();
@@ -535,7 +512,7 @@ Saving data...
                 
                 shuffleSS(ss);
                 makeBackground('#404040')
-                makeSearchArray([centerX],[centerY],recW*5,recH*5,[1],[colors[cols[0]]])
+                makeSearchArray(X,Y,recW,recH,ori,col)
                 drawObjects(ctx1,objects);
                 $('#frame1').show();
                 // Begin
@@ -549,34 +526,10 @@ Saving data...
             $('#frame5').show();
             $('#cont5').click(showFirstTrial);
         }
-        function checkResp(foo){
-
-          var dT2 = new Date();
-          ET=dT2.getTime();
-          rt = ET-STT;
-          if (change==foo) {
-                console.log('right!')
-                if (rt<timeLimit){
-                    trackRecord = trackRecord+1;
-                    thatRight = true;
-                }else{
-                    console.log('right but too late')
-                    thatRight = false;
-                    trackRecord = 0;
-                }
-            }else{
-                console.log('nope')
-                thatRight = false;
-                trackRecord = 0;
-            }
-            isTest = false;
-            trialIsOver();
-        }
 
         function Done() {
 
-              $("#myCanvas").hide();
-              $('.button').hide();
+            $("#myCanvas").hide();
               $("#done").show();
 
               var dataToServer = {};
@@ -590,8 +543,8 @@ Saving data...
         function AfterSuccessDataSaving() {
           // After they are done, send them here:
           // window.location = "https://ucsd.sona-systems.com/webstudy_credit.aspx?experiment_id=1267&credit_token=805f6634de5a46b3aecffe2818d8d90c&survey_code=" + getParameterByName("code");
-          // $('#submitButton').show();
-          $('#done').html("All done, thanks! Please refresh the screen.");
+          $('#submitButton').show();
+          $('#done').html("All done, thanks! Please click submit button.");
           
           console.log("Saved!");
         }
@@ -601,7 +554,7 @@ Saving data...
 
           // window.location = "https://ucsd.sona-systems.com/webstudy_credit.aspx?experiment_id=1267&credit_token=805f6634de5a46b3aecffe2818d8d90c&survey_code=" + getParameterByName("code");  
           $('#submitButton').show();
-          $('#done').html("All done, thanks! Please refresh the screen.");
+          $('#done').html("All done, thanks! Please click submit button.");
 
         }
 
